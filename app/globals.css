@@ -1,0 +1,5 @@
+* { box-sizing: border-box; }
+html, body { width: 100%; min-height: 100%; margin: 0; background: #faf7f1; }
+body { overflow: hidden; }
+.site-shell { width: 100vw; height: 100vh; }
+.minime-app { display: block; width: 100%; height: 100%; border: 0; background: #faf7f1; }

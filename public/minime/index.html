@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1c2c" />
+  <title>MiniMe — Your Pixel Productivity Buddy</title>
+  <meta name="description" content="Plan your day by voice or text and watch your pixel MiniMe do every task with you." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <h1 class="logo"><i>m</i><span>MiniMe</span></h1>
+      <div class="stats">
+        <button id="feedbackBtn" class="feedback-top">Help shape MiniMe</button>
+        <div class="stat" title="Energy">⚡ <span id="energyVal">70</span></div>
+        <div class="stat" title="Streak">🔥 <span id="streakVal">0</span></div>
+        <div class="stat" title="Done today">✅ <span id="doneVal">0/0</span></div>
+      </div>
+    </header>
+
+    <!-- Buddy stage -->
+    <section class="stage-wrap">
+      <div class="stage">
+        <canvas id="buddyCanvas" width="320" height="320"></canvas>
+        <div id="speechBubble" class="bubble hidden"></div>
+      </div>
+      <div class="stage-caption" id="stageCaption">Your MiniMe is chilling. Give it a plan!</div>
+      <div class="stage-actions">
+        <button id="avatarBtn" class="btn small">🖼️ Make it look like me</button>
+        <button id="petBtn" class="btn small">🧸 Desktop pet</button>
+        <button id="notifyBtn" class="btn small">🔔 Enable reminders</button>
+        <button id="recapBtn" class="btn small">🌙 Day recap</button>
+      </div>
+    </section>
+
+    <!-- Plan input -->
+    <section class="planner">
+      <div class="planner-intro"><span>✦</span><div><h2>What’s on your mind?</h2><p>Say it naturally. I’ll turn it into a plan.</p></div></div>
+      <label class="sr-only" for="taskName">Tell MiniMe your plan</label>
+      <input id="taskName" type="text" placeholder="Try “7 to 8 gym, then study biology at 9:30”" autocomplete="off" />
+      <div class="easy-actions">
+        <button id="voiceBtn" class="btn small easy">🎙️ Tell MiniMe</button>
+        <button id="paperBtn" class="btn small easy">📷 Scan paper list</button>
+        <button id="rescueBtn" class="btn small rescue">✨ Rescue my day</button>
+      </div>
+      <div class="time-row">
+        <label class="time-field">Start
+          <input type="time" id="startTime" />
+        </label>
+        <label class="time-field">End
+          <input type="time" id="endTime" />
+        </label>
+        <button id="addBtn" class="btn add" title="Add task">➕ Add</button>
+      </div>
+      <div id="formError" class="form-error hidden"></div>
+      <p class="planner-tip">Write it exactly as you would on paper—MiniMe understands natural plans.</p>
+    </section>
+
+    <!-- Task list -->
+    <section class="tasks">
+      <div class="tasks-head">
+        <h2>Today's Quest Log</h2>
+        <button id="clearBtn" class="btn tiny ghost">clear all</button>
+      </div>
+      <ul id="taskList"></ul>
+      <p id="emptyHint" class="empty-hint">No quests yet. Type a task and pick a time,<br />or paste a plan like “7-8am gym, 9am study”</p>
+    </section>
+
+    <section class="prototype-invite">
+      <div class="invite-copy">
+        <span class="prototype-pill">THIS IS A PROTOTYPE</span>
+        <h2>Would you use a buddy like MiniMe?</h2>
+        <p>Your honest feedback can shape the first real release. Join early access and tell us what MiniMe would be worth to you—there’s no payment today.</p>
+        <div class="invite-actions">
+          <button id="feedbackInviteBtn" class="btn">Give feedback & opt in</button>
+          <button id="sharePrototypeBtn" class="btn ghost">Share prototype</button>
+        </div>
+        <small id="shareStatus" aria-live="polite">Scan the QR to open the prototype and survey on any phone.</small>
+      </div>
+      <div class="qr-wrap"><img src="share/minime-feedback-qr.png" alt="QR code for the MiniMe prototype feedback survey" /><span>SCAN TO TRY MINIME</span></div>
+    </section>
+
+    <footer class="foot">Install me: browser menu → “Add to Home Screen” 📱</footer>
+  </div>
+
+  <!-- Prototype feedback and early access -->
+  <div id="feedbackModal" class="modal hidden">
+    <div class="modal-card feedback-card">
+      <button id="feedbackCloseX" class="modal-x" aria-label="Close feedback form">✕</button>
+      <span class="prototype-pill">EARLY PROTOTYPE</span>
+      <h3>Help shape the buddy you’d actually use.</h3>
+      <p>Try MiniMe, then tell us what would make it useful in real life. If you’re interested, join early access and share what you’d feel comfortable paying. <strong>No payment is collected today.</strong></p>
+      <form id="feedbackForm">
+        <div class="feedback-grid">
+          <label>Your name <span>optional</span><input name="name" maxlength="100" autocomplete="name" placeholder="What should we call you?" /></label>
+          <label>Email <b>*</b><input name="email" type="email" maxlength="200" autocomplete="email" placeholder="you@example.com" required /></label>
+        </div>
+        <label>I’m mainly a… <span>optional</span>
+          <select name="role"><option value="">Choose one</option><option>Student</option><option>Working professional</option><option>Founder / freelancer</option><option>Parent / caregiver</option><option>Something else</option></select>
+        </label>
+        <fieldset><legend>What would help you most? <b>*</b></legend>
+          <div class="choice-grid">
+            <label><input type="radio" name="helpfulFeature" value="Tell me what to do now" required /><span>🧭 Tell me what to do now</span></label>
+            <label><input type="radio" name="helpfulFeature" value="Desktop or phone pet" /><span>🧸 Desktop or phone pet</span></label>
+            <label><input type="radio" name="helpfulFeature" value="Voice and paper planning" /><span>🎙️ Voice & paper planning</span></label>
+            <label><input type="radio" name="helpfulFeature" value="Focus with my buddy" /><span>✨ Focus with my buddy</span></label>
+          </div>
+        </fieldset>
+        <label>What should we improve first? <span>optional</span><textarea name="feedback" maxlength="2000" rows="3" placeholder="Be honest—one sentence is enough."></textarea></label>
+        <fieldset><legend>Would you pre-order MiniMe? <b>*</b></legend>
+          <div class="choice-grid compact">
+            <label><input type="radio" name="preorderInterest" value="Yes, keep me updated" required /><span>Yes, keep me updated</span></label>
+            <label><input type="radio" name="preorderInterest" value="Maybe, after testing" /><span>Maybe, after testing</span></label>
+            <label><input type="radio" name="preorderInterest" value="Feedback only" /><span>Feedback only</span></label>
+          </div>
+        </fieldset>
+        <label class="amount-label">What one-time amount would feel fair? <span>optional · AUD</span><div class="amount-input"><i>$</i><input name="contributionAmount" type="number" min="0" max="10000" step="1" inputmode="numeric" placeholder="15" /></div></label>
+        <label class="consent-row"><input name="consent" type="checkbox" required /><span>I agree that MiniMe can save this response and email me about prototype updates. I can opt out anytime.</span></label>
+        <div id="feedbackStatus" class="feedback-status" aria-live="polite"></div>
+        <button id="feedbackSubmit" class="btn feedback-submit" type="submit">Send feedback & join early access →</button>
+      </form>
+      <p class="privacy-note">Prototype research only · No account needed · No payment collected</p>
+    </div>
+  </div>
+
+  <div id="feedbackThanks" class="modal hidden">
+    <div class="modal-card thanks-card">
+      <div class="thanks-pet"><canvas id="thanksCanvas" width="160" height="160"></canvas></div>
+      <span class="prototype-pill">YOU’RE ON THE LIST</span>
+      <h3>Thank you for helping MiniMe grow.</h3>
+      <p>Your feedback is part of the product now. We’ll only contact you with meaningful prototype updates.</p>
+      <button id="thanksClose" class="btn">Back to my buddy</button>
+    </div>
+  </div>
+
+  <!-- Paper-to-Pet modal -->
+  <div id="paperModal" class="modal hidden">
+    <div class="modal-card paper-card">
+      <h3>📷 Paper to Pet</h3>
+      <p>Photograph your handwritten list. MiniMe will try to read it on this device; you can fix anything before adding it.</p>
+      <label class="paper-drop" for="paperFile">
+        <span>＋</span>
+        <b>Take a photo or choose one</b>
+        <small>No image is uploaded</small>
+      </label>
+      <input type="file" id="paperFile" accept="image/*" capture="environment" hidden />
+      <img id="paperPreview" class="paper-preview hidden" alt="Your paper list preview" />
+      <div id="scanStatus" class="scan-status hidden"></div>
+      <label class="paper-text-label" for="paperText">Tasks MiniMe found</label>
+      <textarea id="paperText" rows="6" placeholder="One task per line, for example:&#10;7-8am gym&#10;Study biology at 9am&#10;Call Mum at 6pm"></textarea>
+      <div class="modal-actions">
+        <button id="paperAdd" class="btn">✨ Make my plan</button>
+        <button id="paperClose" class="btn ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rescue confirmation -->
+  <div id="rescueModal" class="modal hidden">
+    <div class="modal-card rescue-card">
+      <h3>✨ Your lighter plan</h3>
+      <p>MiniMe picked three achievable steps and added breathing room. Nothing was deleted.</p>
+      <div id="rescuePreview" class="rescue-preview"></div>
+      <div class="modal-actions">
+        <button id="rescueApply" class="btn">Use this plan</button>
+        <button id="rescueClose" class="btn ghost">Keep my plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-page fallback when browser floating windows are unavailable -->
+  <aside id="petFallback" class="pet-fallback hidden">
+    <button id="petFallbackClose" aria-label="Close desktop pet">✕</button>
+    <canvas id="petFallbackCanvas" width="160" height="160"></canvas>
+    <strong id="petFallbackTitle">MiniMe is nearby</strong>
+    <small>Keep going—you’re not doing it alone.</small>
+  </aside>
+
+  <!-- Avatar modal -->
+  <div id="avatarModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Create your pixel twin</h3>
+      <p>Upload a selfie — we pixelate it on your device. Nothing is uploaded anywhere.</p>
+      <input type="file" id="avatarFile" accept="image/*" />
+      <div class="avatar-preview-row">
+        <canvas id="avatarPreview" width="120" height="120"></canvas>
+        <div class="arrow">→</div>
+        <canvas id="avatarResult" width="120" height="120"></canvas>
+      </div>
+      <div id="cropHint" class="crop-controls hidden">
+        <div class="zoom-row">
+          <span>🔍</span>
+          <input type="range" id="avatarZoom" min="1" max="6" step="0.1" value="2.2" />
+        </div>
+        <p class="crop-hint">Drag the left photo to centre your face, slide to zoom.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="avatarSave" class="btn" disabled>Use this face</button>
+        <button id="avatarReset" class="btn ghost">Reset to default</button>
+        <button id="avatarClose" class="btn ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day recap -->
+  <div id="recapModal" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="recapTitle">🌙 Day Recap</h3>
+      <div id="recapSummary" class="recap-summary"></div>
+      <ul id="recapList" class="recap-list"></ul>
+      <p id="recapVerdict" class="recap-verdict"></p>
+      <div class="modal-actions">
+        <button id="recapCopy" class="btn">📋 Copy summary</button>
+        <button id="recapClose" class="btn ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task completion prompt -->
+  <div id="checkModal" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="checkTitle">Time's up!</h3>
+      <p id="checkText">Did you finish this with your buddy?</p>
+      <div class="modal-actions">
+        <button id="checkYes" class="btn">💪 Yes, crushed it</button>
+        <button id="checkNo" class="btn ghost">😴 Skipped it</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="buddy.js"></script>
+  <script src="avatar.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

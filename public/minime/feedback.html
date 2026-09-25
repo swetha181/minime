@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a1c2c" />
+  <title>MiniMe — Feedback & Pre-order</title>
+  <meta name="description" content="Tried the MiniMe prototype? Tell us what you think and opt in for pre-order." />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root { --bg:#faf7f1; --paper:#fffdf9; --ink:#29283a; --muted:#7e798d; --accent:#7668aa; --accent-2:#e89289; --panel-2:#e8e1d7; --pixel-font:"Press Start 2P",monospace; --body-font:"VT323",monospace; }
+    body { min-height:100vh; background:radial-gradient(circle at 12% 4%,rgba(232,146,137,.14),transparent 26%),radial-gradient(circle at 90% 8%,rgba(118,104,170,.13),transparent 30%),var(--bg); color:var(--ink); font-family:var(--body-font); }
+    .fb-wrap { max-width: 540px; margin: 0 auto; padding: 18px 16px 44px; display: flex; flex-direction: column; gap: 18px; }
+    .fb-hero { text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .fb-hero img { width: 72px; height: 72px; image-rendering: pixelated; border-radius: 14px; }
+    .fb-hero h1 { font-family: var(--pixel-font); font-size: 17px; line-height: 1.7; }
+    .fb-hero h1 span { color: var(--accent); }
+    .fb-hero p { color: var(--muted); font-size: 19px; max-width: 420px; }
+    .proto-badge {
+      display: inline-block;
+      font-family: var(--pixel-font);
+      font-size: 9px;
+      color: #14162a;
+      background: #eee9f7;
+      color: #5d527f;
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+    form.card { display: flex; flex-direction: column; gap: 16px; background:var(--paper); border:1px solid var(--panel-2); border-radius:22px; padding:22px; box-shadow:0 18px 50px rgba(59,48,77,.09); }
+    .q { display: flex; flex-direction: column; gap: 8px; }
+    .q > label.q-label, .q > .q-label {
+      font-family: var(--pixel-font);
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      line-height: 1.6;
+    }
+    .q input[type="text"], .q input[type="email"], .q textarea, .q select {
+      background: #fbf9f6;
+      border: 1px solid var(--panel-2);
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: var(--body-font);
+      font-size: 20px;
+      padding: 11px 12px;
+      width: 100%;
+    }
+    .q textarea { resize: vertical; }
+    .q input:focus, .q textarea:focus, .q select:focus { outline: none; border-color: var(--accent); }
+    .opts { display: flex; flex-direction: column; gap: 6px; }
+    .opts label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fbf9f6;
+      border: 1px solid var(--panel-2);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .opts label:hover { border-color: var(--accent); }
+    .opts input { accent-color: var(--accent); width: 18px; height: 18px; }
+    .stars { display: flex; gap: 6px; flex-wrap: wrap; }
+    .stars label {
+      flex: 1;
+      min-width: 52px;
+      justify-content: center;
+      text-align: center;
+    }
+    .fine { color: var(--muted); font-size: 16px; }
+    .submit-btn { font-size: 13px; padding: 14px; }
+    .back-link { text-align: center; }
+    .back-link a { color: var(--muted); font-size: 18px; }
+    .back-link a:hover { color: var(--accent); }
+    .consent { display:flex; align-items:flex-start; gap:9px; background:#f4f0ea; border-radius:10px; padding:11px; font-size:17px; color:var(--muted); }
+    .consent input { margin-top:4px; accent-color:var(--accent); }
+    .form-status { min-height:20px; color:#b6554d; font-size:17px; text-align:center; }
+    .success-card { background:var(--paper); border:1px solid var(--panel-2); border-radius:22px; padding:30px 22px; text-align:center; box-shadow:0 18px 50px rgba(59,48,77,.09); }
+    .success-card h2 { font-family:var(--pixel-font); font-size:13px; line-height:1.7; color:var(--accent); }
+    .success-card p { margin-top:12px; font-size:20px; color:var(--muted); }
+    .hidden { display:none!important; }
+  </style>
+</head>
+<body>
+  <div class="fb-wrap">
+    <div class="fb-hero">
+      <img src="icons/icon-192.png" alt="MiniMe" />
+      <h1>Mini<span>Me</span> Feedback</h1>
+      <span class="proto-badge">🧪 THIS IS A PROTOTYPE</span>
+      <p>Thanks for trying MiniMe — the pixel buddy that does your day with you.
+        Two minutes of your honesty shapes what we build next.</p>
+    </div>
+
+    <form class="card" id="feedbackForm">
+
+      <div class="q">
+        <span class="q-label">1 · How much did you enjoy the prototype?</span>
+        <div class="opts stars">
+          <label><input type="radio" name="rating" value="1" required />😕 1</label>
+          <label><input type="radio" name="rating" value="2" />🙂 2</label>
+          <label><input type="radio" name="rating" value="3" />😄 3</label>
+          <label><input type="radio" name="rating" value="4" />🤩 4</label>
+          <label><input type="radio" name="rating" value="5" />💛 5</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-label">2 · What did you like most?</span>
+        <div class="opts">
+          <label><input type="checkbox" name="liked" value="buddy-mirrors-my-day" />🕹️ The buddy doing my schedule with me</label>
+          <label><input type="checkbox" name="liked" value="pixel-twin" />🖼️ Making it look like me</label>
+          <label><input type="checkbox" name="liked" value="natural-planning" />✍️ Typing/speaking my plan naturally</label>
+          <label><input type="checkbox" name="liked" value="consequences" />💪 Rewards &amp; tired-buddy consequences</label>
+          <label><input type="checkbox" name="liked" value="desktop-pet" />🧸 Desktop pet mode</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="missing">3 · What's missing or annoying?</label>
+        <textarea id="missing" name="missing" rows="3"
+          placeholder="Be brutal — this is exactly what we need to hear."></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-label">4 · Would you use MiniMe as your daily planner?</span>
+        <div class="opts">
+          <label><input type="radio" name="would_use" value="yes" required />✅ Yes, this beats my current setup</label>
+          <label><input type="radio" name="would_use" value="maybe" />🤔 Maybe, if it had more features</label>
+          <label><input type="radio" name="would_use" value="no" />❌ No, not for me</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-label">5 · Interested? Opt in for pre-order 💌</span>
+        <div class="opts">
+          <label><input type="radio" name="preorder" value="yes" required />🚀 Yes — reserve my spot for the full version</label>
+          <label><input type="radio" name="preorder" value="updates-only" />📬 Just keep me posted</label>
+          <label><input type="radio" name="preorder" value="no" />🙅 Not right now</label>
+        </div>
+        <input type="email" name="email" placeholder="Your email for prototype updates" required />
+        <span class="fine">We'll only use it for MiniMe news. No spam, unsubscribe anytime.</span>
+      </div>
+
+      <div class="q">
+        <span class="q-label">6 · Love it? Contribute what you can 💛</span>
+        <span class="fine">Every bit funds development. Pledge now, pay only when we launch.</span>
+        <div class="opts">
+          <label><input type="radio" name="pledge" value="0" required />🌱 $0 — cheering from the sidelines</label>
+          <label><input type="radio" name="pledge" value="2" />☕ $2 — buy the buddy a coffee</label>
+          <label><input type="radio" name="pledge" value="5" />🍜 $5 — feed the pixel buddy</label>
+          <label><input type="radio" name="pledge" value="10" />🏋️ $10 — gym membership for two</label>
+          <label><input type="radio" name="pledge" value="custom" />✨ Another amount</label>
+        </div>
+        <input type="text" name="pledge_custom" placeholder="If another amount — how much?" />
+      </div>
+
+      <div class="q">
+        <label class="q-label" for="name">Your name (optional)</label>
+        <input type="text" id="name" name="name" placeholder="So we can thank you properly" />
+      </div>
+
+      <label class="consent"><input type="checkbox" name="consent" required /><span>I agree that MiniMe can save this response and email me about prototype updates. I can unsubscribe anytime.</span></label>
+
+      <div id="formStatus" class="form-status" aria-live="polite"></div>
+      <button type="submit" class="btn submit-btn">📨 Send feedback &amp; subscribe</button>
+    </form>
+
+    <div id="successCard" class="success-card hidden">
+      <h2>YOU HELPED MINIME GROW 💛</h2>
+      <p>Your feedback is saved and you’re on the prototype update list.</p>
+    </div>
+
+    <p class="back-link"><a href="index.html">← Back to the MiniMe prototype</a></p>
+  </div>
+  <script>
+    document.getElementById('feedbackForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const liked = data.getAll('liked');
+      const pledge = data.get('pledge');
+      const custom = Number(String(data.get('pledge_custom') || '').replace(/[^0-9.]/g, ''));
+      const amount = pledge === 'custom' ? custom : Number(pledge || 0);
+      const payload = {
+        name: data.get('name'),
+        email: data.get('email'),
+        helpfulFeature: liked.length ? liked.join(', ') : 'No favourite selected',
+        preorderInterest: data.get('preorder'),
+        contributionAmount: Number.isFinite(amount) ? amount : 0,
+        consent: data.get('consent') === 'on',
+        feedback: [
+          `Rating: ${data.get('rating')}/5`,
+          `Would use daily: ${data.get('would_use')}`,
+          `Missing or annoying: ${data.get('missing') || 'No comment'}`
+        ].join('\n')
+      };
+      const button = form.querySelector('button[type="submit"]');
+      const status = document.getElementById('formStatus');
+      button.disabled = true;
+      button.textContent = 'Sending…';
+      status.textContent = '';
+      try {
+        const response = await fetch('/api/feedback', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Could not save your feedback.');
+        form.classList.add('hidden');
+        document.getElementById('successCard').classList.remove('hidden');
+      } catch (error) {
+        status.textContent = error.message || 'Please try again.';
+        button.disabled = false;
+        button.textContent = '📨 Send feedback & subscribe';
+      }
+    });
+  </script>
+</body>
+</html>
